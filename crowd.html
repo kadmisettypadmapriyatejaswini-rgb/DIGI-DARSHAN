@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crowd Analytics Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>	
+<body class="bg-gray-100 text-gray-900">
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">Crowd Analytics</h1>
+    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Export Report</button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <!-- Total Crowd -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold">Total Crowd</h2>
+      <p class="text-3xl font-bold">8,700</p>
+      <span class="text-green-600">+12% from yesterday</span>
+    </div>
+
+    <!-- Avg Wait Time -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold">Avg Wait Time</h2>
+      <p class="text-3xl font-bold">39 min</p>
+      <span class="text-blue-600">-5 min from peak</span>
+    </div>
+
+    <!-- Peak Prediction -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold">Peak Prediction</h2>
+      <p class="text-3xl font-bold">4:00 PM</p>
+      <span class="text-yellow-600">Expected: 3,500 visitors</span>
+    </div>
+
+    <!-- AI Confidence -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <h2 class="text-lg font-semibold">AI Confidence</h2>
+      <p class="text-xl font-bold">85%</p> <!-- smaller font -->
+      <span class="text-green-600 text-sm">High model accuracy</span> <!-- smaller text -->
+    </div>
+
+    <!-- Real-time Crowd Prediction Chart -->
+    <div class="bg-white shadow rounded-lg p-4 md:col-span-2">
+      <h2 class="text-lg font-semibold mb-2">Real-time Crowd Prediction</h2>
+      <canvas id="crowdChart"></canvas>
+    </div>
+
+    <!-- Crowd Distribution Bar Chart -->
+    <div class="bg-white shadow rounded-lg p-4 md:col-span-3">
+      <h2 class="text-lg font-semibold mb-2">Crowd Distribution by Temple</h2>
+      <canvas id="templeChart"></canvas>
+    </div>
+
+  </main>
+
+  <!-- Scripts for Charts -->
+  <script>
+    // Line Chart - Real-time Crowd Prediction
+    const ctx1 = document.getElementById('crowdChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ["12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"],
+        datasets: [{
+          label: 'Visitors',
+          data: [0, 900, 1800, 2700, 3600, 2800, 1500, 800],
+          borderColor: 'rgba(59,130,246,1)',
+          backgroundColor: 'rgba(59,130,246,0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      }
+    });
+
+    // Bar Chart - Distribution by Temple (medium-sized bars)
+    const ctx2 = document.getElementById('templeChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ["Somnath", "Dwarkadhish", "Ambaji", "Pavagadh"],
+        datasets: [{
+          label: "Crowd Distribution (%)",
+          data: [28.7, 20.7, 36.8, 13.8],
+          backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
+          barPercentage: 0.6,      // controls bar width
+          categoryPercentage: 0.6  // controls spacing between bars
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { 
+            beginAtZero: true,
+            title: { display: true, text: "Percentage (%)" }
+          },
+          x: { 
+            title: { display: true, text: "Temple" } 
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

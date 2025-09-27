@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    /* Vertical layout for sections */
+    .blueprint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* space between sections */
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .section {
+      background: #fff3cd;
+      border: 2px solid #ff9800;
+      border-radius: 12px;
+      padding: 25px 40px;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      width: 100%;
+      max-width: 300px;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .section:hover {
+      transform: scale(1.05);
+      background: #ffe8a1;
+    }
+
+    .logout {
+      margin-top: 40px;
+      display: inline-block;
+      background: #d9534f;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .logout:hover {
+      background: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <h2>VOLUNTEER PORTAL</h2>
+
+  <div class="blueprint">
+    <div class="section" onclick="openScanner('Main Entrance Scanner')">Main Entrance Scanner</div>
+    <div class="section">Queue Line</div>
+    <div class="section" onclick="openScanner('Exit Gate Scanner')">Exit Gate Scanner</div>
+    <div class="section" id="emergency-btn" onclick="triggerEmergency()">Emergency</div>
+  </div>
+
+  <a href="index.html" class="logout">Logout</a>
+
+  <script>
+    function openScanner(section) {
+      window.open('index.html?section=' + encodeURIComponent(section), '_blank');
+    }
+
+    function triggerEmergency() {
+      const btn = document.getElementById('emergency-btn');
+
+      // Turn button red and bold
+      btn.style.background = '#ff4d4d';
+      btn.style.color = 'white';
+      btn.style.fontWeight = 'bold';
+      btn.style.transform = 'scale(1.05)';
+
+      // Show emergency message
+      alert('🚨 EMERGENCY ALERT! 🚨');
+
+      // Reset button after 3 seconds
+      setTimeout(() => {
+        btn.style.background = '#fff3cd';
+        btn.style.color = 'black';
+        btn.style.fontWeight = 'normal';
+        btn.style.transform = 'scale(1)';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

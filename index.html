@@ -1,0 +1,80 @@
+<!--scanner-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body { font-family: Arial,sans-serif; text-align:center; padding:20px; }
+    #reader { width: 500px; margin:auto; }
+    #counts { margin-top: 30px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2 id="title">QR Scanner</h2>
+  <div id="reader"></div>
+  <p id="result" style="font-weight:bold;margin-top:20px;"></p>
+
+  <div id="counts">
+    <p>Main Entrance: <span id="mainEntrance">0</span></p>
+    <p>Queue In: <span id="queueLineIn">0</span></p>
+    <p>Queue Out: <span id="queueLineOut">0</span></p>
+  </div>
+
+  <script>
+    // Get section from query parameter
+    const params = new URLSearchParams(window.location.search);
+    const section = params.get('section') || 'mainEntrance'; // default mainEntrance
+    document.getElementById('title').innerText = 'Scan QR for: ' + section;
+
+    // Load current counts from backend
+    async function loadCounts() {
+      try {
+        const res = await fetch('/counts');
+        const data = await res.json();
+        document.getElementById('mainEntrance').innerText = data.mainEntrance;
+        document.getElementById('queueLineIn').innerText = data.queueLineIn;
+        document.getElementById('queueLineOut').innerText = data.queueLineOut;
+      } catch(err) {
+        console.error('Error loading counts:', err);
+      }
+    }
+
+    // Increment count on backend after successful scan
+    async function incrementCount(section) {
+      try {
+        let route = '';
+        if(section === 'mainEntrance') route = 'main-entrance';
+        else if(section === 'queueLineIn') route = 'queue-in';
+        else if(section === 'queueLineOut') route = 'queue-out';
+        else route = 'main-entrance';
+
+        const res = await fetch(`/scan/${route}`, { method: 'POST' });
+        const data = await res.json();
+        loadCounts(); // refresh counts
+        return data.count;
+      } catch(err) {
+        console.error('Error incrementing count:', err);
+      }
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      document.getElementById('result').innerText = 'Scanned QR: ' + decodedText;
+      incrementCount(section); // update backend counter
+      html5QrcodeScanner.clear(); // stop scanning after first scan
+    }
+
+    var html5QrcodeScanner = new Html5Qrcode("reader");
+    html5QrcodeScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    ).catch(err => console.error(err));
+
+    // Load counts initially
+    loadCounts();
+  </script>
+</body>
+</html>
